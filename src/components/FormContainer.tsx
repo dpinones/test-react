@@ -17,9 +17,8 @@ const FormContainer = () => {
   };
 
   const submitHandler = (result: string) => {
-    console.log("formId", formId);
-    console.log("result", result);
-    const args = [formId, [+result]];
+    const args = [formId, result];
+    console.log('args',args)
     invoke({ args })
       .then((response) => {
         console.log(response);

@@ -13,7 +13,7 @@ interface IQuestion {
   selectedOption: string | undefined;
 }
 
-const Form = (props: { id: number, onSubmit: (result: string) => void }) => {
+const Form = (props: { id: number; onSubmit: (result: string) => void }) => {
   const { contract: test } = useTestContract();
 
   const { data: formResult } = useStarknetCall({
@@ -30,17 +30,17 @@ const Form = (props: { id: number, onSubmit: (result: string) => void }) => {
       let form = [];
       if (formResult[0] instanceof Array) {
         for (let item of formResult[0]) {
-          let i = 0;
+          // let i = 0;
           let question: IQuestion = {
-            id: i.toString(),
+            id: responseToString(item.description),
             description: responseToString(item.description),
             optionA: responseToString(item.optionA),
             optionB: responseToString(item.optionB),
             optionC: responseToString(item.optionC),
             optionD: responseToString(item.optionD),
-            selectedOption: undefined
+            selectedOption: undefined,
           };
-          i++;
+          // i++;
           form.push(question);
         }
       }
@@ -50,13 +50,11 @@ const Form = (props: { id: number, onSubmit: (result: string) => void }) => {
   }, [formResult]);
 
   const handleSubmit = () => {
-    let result = '';
-    form.forEach((item: IQuestion) => {
-      result += item.selectedOption;
-    })
-    props.onSubmit(result)
-  }
-
+    const result = form.map((item: IQuestion) => {
+      return item.selectedOption;
+    });
+    props.onSubmit(result);
+  };
 
   const handleChange = (event: any) => {
     const name = event.target.name;
@@ -67,7 +65,7 @@ const Form = (props: { id: number, onSubmit: (result: string) => void }) => {
       }).selectedOption = value;
       return prevState;
     });
-  }
+  };
 
   return (
     <div>

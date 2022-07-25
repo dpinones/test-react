@@ -1,6 +1,8 @@
 import { useStarknetInvoke } from "@starknet-react/core";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTestContract } from "../hooks/useTestContract";
+import convertCorrectOption from "../utils/convertCorrectOption";
+import responseToString from "../utils/responseToString";
 import stringToHex from "../utils/stringToHex";
 
 const CreateTest = () => {
@@ -16,39 +18,21 @@ const CreateTest = () => {
   const [optionC, setOptionC] = useState("");
   const [optionD, setOptionD] = useState("");
   const [optionCorrect, setOptionCorrect] = useState<number | null>(null);
+  const [name, setName] = useState("");
+
+  const [questions, setQuestions] = useState<Array<any>>([]);
 
   const handleRadioChange = (event: any) => {
     const value = event.target.value;
     setOptionCorrect(+value);
-  }
+  };
 
-  const handleClick = (event: any) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
     const payload = {
-      args: [
-        1,
-        [
-          {
-            description,
-            optionA,
-            optionB,
-            optionC,
-            optionD,
-            optionCorrect,
-          },
-          /*           {
-            description: 2,
-            optionA: 2,
-            optionB: 2,
-            optionC: 2,
-            optionD: 2,
-            optionCorrect: 2,
-          }, */
-        ],
-        0,
-      ],
+      args: [name, questions, 0],
     };
-    console.log('payload', payload)
+    console.log("payload", payload);
     invoke(payload)
       .then((response) => {
         console.log(response);
@@ -61,22 +45,91 @@ const CreateTest = () => {
   const handleInputChange = (event: any, setFunction: any) => {
     const value = event.target.value;
     setFunction(stringToHex(value));
-  }
+  };
+
+  const addQuestionHandler = () => {
+    const newQuestion = {
+      description,
+      optionA,
+      optionB,
+      optionC,
+      optionD,
+      optionCorrect,
+    };
+    setQuestions((prevQuestions: any) => {
+      return [...prevQuestions, newQuestion];
+    });
+    (document.getElementById("form") as any).reset();
+    setDescription("");
+    setOptionA("");
+    setOptionB("");
+    setOptionC("");
+    setOptionD("");
+    setOptionCorrect(null);
+  };
 
   return (
     <>
-      <form onSubmit={handleClick}>
-        <br />
+      <h3>Your Form:</h3>
+      <label>Name: </label>
+      <input
+        type="text"
+        onChange={(event) => handleInputChange(event, setName)}
+      />
+      {questions.length === 0 && <p>Add new questions to create a form</p>}
+      {questions.length > 0 &&
+        questions.map((question) => {
+          return (
+            <ul key={question.description}>
+              <li>Description: {responseToString(question.description)}</li>
+              <li>Option A: {responseToString(question.optionA)}</li>
+              <li>Option B: {responseToString(question.optionB)}</li>
+              <li>Option C: {responseToString(question.optionC)}</li>
+              <li>Option D: {responseToString(question.optionD)}</li>
+              <li>
+                Correct Option: {convertCorrectOption(question.optionCorrect)}
+              </li>
+            </ul>
+          );
+        })}
+      {questions.length > 0 && (
+        <button onClick={handleSubmit} type="submit">
+          SEND
+        </button>
+      )}
+      <br />
+      <h4>Add new question:</h4>
+      <form id="form">
         <label>Description: </label>
-        <input type="text" onChange={event => handleInputChange(event, setDescription)}/> <br />
+        <input
+          type="text"
+          onChange={(event) => handleInputChange(event, setDescription)}
+        />{" "}
+        <br />
         <label>Option A: </label>
-        <input type="text" onChange={event => handleInputChange(event, setOptionA)} /> <br />
+        <input
+          type="text"
+          onChange={(event) => handleInputChange(event, setOptionA)}
+        />{" "}
+        <br />
         <label>Option B: </label>
-        <input type="text" onChange={event => handleInputChange(event, setOptionB)} /> <br />
+        <input
+          type="text"
+          onChange={(event) => handleInputChange(event, setOptionB)}
+        />{" "}
+        <br />
         <label>Option C: </label>
-        <input type="text" onChange={event => handleInputChange(event, setOptionC)} /> <br />
+        <input
+          type="text"
+          onChange={(event) => handleInputChange(event, setOptionC)}
+        />{" "}
+        <br />
         <label>Option D: </label>
-        <input type="text" onChange={event => handleInputChange(event, setOptionD)} /> <br /> <br />
+        <input
+          type="text"
+          onChange={(event) => handleInputChange(event, setOptionD)}
+        />{" "}
+        <br /> <br />
         <label>Correct Option:</label> <br />
         <input
           type="radio"
@@ -110,7 +163,10 @@ const CreateTest = () => {
         />
         <label htmlFor="3">D</label>
         <br /> <br />
-        <button type="submit">SEND</button>
+        <button onClick={addQuestionHandler} type="button">
+          Add question
+        </button>
+        <br />
       </form>
       <ul>
         <li>Data: {data}</li>
