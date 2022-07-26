@@ -6,6 +6,6 @@ import TestAbi from '../abi/testAbi.json'
 export function useTestContract() {
   return useContract({
     abi: TestAbi as Abi,
-    address: '0x6617a86c7fe8bd7f2cfcdcbf89f76cc6814ee007b968064d0c90e1d6e064370',
+    address: '0x605ae4fab96f860623e521181c5b7d64c19e2e914cd73dd7048c6edceef470d',
   })
 }

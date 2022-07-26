@@ -9,7 +9,7 @@ const CreateTest = () => {
   const { contract: test } = useTestContract();
   const { data, loading, error, reset, invoke } = useStarknetInvoke({
     contract: test,
-    method: "create_test_and_add_questions",
+    method: "create_test",
   });
 
   const [description, setDescription] = useState("");
@@ -30,7 +30,7 @@ const CreateTest = () => {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const payload = {
-      args: [name, questions, 0],
+      args: [name, questions],
     };
     console.log("payload", payload);
     invoke(payload)

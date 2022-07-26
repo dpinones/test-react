@@ -17,7 +17,7 @@ const FormSelector = (props: {onSubmit: (formId: number) => void}) => {
   }
 
   return <div>
-      <h3>Please insert the id of the form you want to access:</h3>
+      <label>Please insert the id of the form you want to access:</label><br />
       <input type="number" value={formId} onChange={idChangeHandler} />
       <button onClick={submit}>GO!</button>
     </div>
