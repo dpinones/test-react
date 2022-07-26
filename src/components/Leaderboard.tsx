@@ -20,10 +20,10 @@ const Leaderboard: React.FC<{ formId: number; account: any }> = ({
   useMemo(() => {
     if (leaderboardResult && leaderboardResult.length > 0) {
       let innerLeaderboard = [];
-      for (let item of leaderboardResult) {
+      for (let item of leaderboardResult[0]) {
         innerLeaderboard.push({
-          wallet: item[0] ? "0x" + item[0].toString(16) : "?",
-          score: +item[1]?.toString(10),
+          wallet: item['user'] ? "0x" + item['user'].toString(16) : "?",
+          score: +item['score']?.toString(10),
         });
       }
       innerLeaderboard.sort((a, b) => b.score - a.score);
