@@ -41,13 +41,8 @@ const Leaderboard: React.FC<{ formId: number; account: any }> = ({
       </thead>
       <tbody>
         {leaderboard.map((item) => {
-          return item.wallet === account ? (
-            <tr key={item.wallet} style={{color: 'green', fontWeight: 'bold'}}>
-              <td>{item.wallet}</td>
-              <td>{item.score}</td>
-            </tr>
-          ) : (
-            <tr key={item.wallet}>
+          return  (
+            <tr key={item.wallet} className={item.wallet === account ? 'my-wallet' : ''}>
               <td>{item.wallet}</td>
               <td>{item.score}</td>
             </tr>
